@@ -9,8 +9,8 @@ class SetMenuController extends Controller
 {
     public function index()
     {
-        $setMenus = SetMenu::get();
+        $setMenus = SetMenu::with(['cuisines'])->get();
  
-        return response()->json($setMenus); 
+        return response()->json(['data' => $setMenus]); 
     }
 }

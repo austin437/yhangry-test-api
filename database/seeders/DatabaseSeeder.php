@@ -2,23 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\SetMenu;
+use App\Models\Cuisine;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
  
-
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
         $response = Http::get('https://staging.yhangry.com/booking/test/set-menus');
 
         $setMenus = json_decode($response->body(), true)['data'];
@@ -47,9 +41,18 @@ class DatabaseSeeder extends Seeder
             $menu->highlight = $setMenu['highlight'];
             $menu->available = $setMenu['available'];
             $menu->number_of_orders = $setMenu['number_of_orders'];
-            $menu->cuisine_id = $setMenu['cuisines'][0]['id'];
 
             $menu->save();
+
+            $cuisines = $setMenu['cuisines'];
+
+            foreach($cuisines as $cuisine) {
+                $c = new Cuisine;
+                $c->id = $cuisine['id'];
+                $c->set_menu_id = $menu->id;
+                $c->name = $cuisine['name'];
+                $c->save();
+            }
         }
 
     }

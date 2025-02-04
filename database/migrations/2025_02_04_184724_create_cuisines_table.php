@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuisines', function (Blueprint $table) {
-            $table->id();
+            $table->integer('id');
+            $table->integer('set_menu_id');
             $table->string('name');
             $table->timestamps();
         });
